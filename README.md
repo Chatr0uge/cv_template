@@ -4,12 +4,20 @@ This repository contains the LaTeX source code for a academic curriculum vitae (
 
 ## Preview
 
-Below is a preview of the generated CV PDF:
+Below is a preview of the generated CV PDF (front and back):
+
+<table>
+  <tr>
+    <td align="center"><img src="images/preview1.png" alt="CV Preview Page 1" width="350"/></td>
+    <td align="center"><img src="images/preview2.png" alt="CV Preview Page 2" width="350"/></td>
+  </tr>
+  <tr>
+    <td align="center">Page 1</td>
+    <td align="center">Page 2</td>
+  </tr>
+</table>
 
 [📄 View CV PDF](cv.pdf)
-
-<embed src="cv.pdf" type="application/pdf" width="100%" height="600px" />
-
 
 ## Features
 
