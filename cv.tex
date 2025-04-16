@@ -1,0 +1,519 @@
+%-------------------------
+% CV / Resume in LaTeX
+% Author : Based on Jake Gutierrez's template
+% License: MIT
+%-------------------------
+\documentclass[letterpaper,11pt]{article}
+
+%---------- Package Imports ----------
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}        % Font encoding
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}           % Extra symbol font
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{fontawesome5}       % Icons (GitHub, LinkedIn, etc.)
+\usepackage{multicol}
+\usepackage{hvlogos}
+\usepackage[default,regular]{sourceserifpro}  % Primary font
+\usepackage{tikz}               % For custom skill bar dots
+\usepackage[most]{tcolorbox}    % For colored boxes
+
+%---------- Font and Color Config ----------
+\renewcommand*\sfdefault{ugq}         % Sets a default sans-serif font
+\definecolor{MyRed}{RGB}{160, 71, 71}
+\definecolor{MyRed2}{RGB}{160, 71, 71}
+\definecolor{MyYellow}{RGB}{160, 71, 70}
+\definecolor{MyBackgroundGray}{RGB}{252, 252, 252}
+\definecolor{MyDarkGray}{RGB}{25, 25, 25}
+
+%---------- Page & PDF Setup ----------
+\pagestyle{fancy}
+\fancyhf{}                  % Clear header/footer
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyfoot{}                % No footer content
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.19in}
+\addtolength{\topmargin}{-0.7in}
+\addtolength{\textheight}{1.4in}
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\pdfgentounicode=1          % For better PDF text recognition
+
+%---------- Section Formatting ----------
+\titleformat{\section}{
+  \vspace{-4pt}\color{MyRed2}\scshape\raggedright\large\bfseries
+}{}{0em}{}[\color{MyRed2}\titlerule \vspace{-3pt}]
+
+%---------- Resume Commands ----------
+\newcommand{\resumeItem}[1]{
+  \item\small{#1 \vspace{-2pt}}
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+  \begin{tabularx}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{\small #2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabularx}\vspace{-11pt}
+}
+
+% Creates a heading with optional GitHub, PDF, and BibTeX icons on one line
+\newcommand{\resumeProjectHeading}[5]{
+  \item
+  \begin{tabularx}{1.0\textwidth}{ll@{\extracolsep{\fill}}r}
+    \small#1 | & % Project name & short description
+    \hspace{.5em}\tcbox[
+      on line,
+      boxsep=1pt,
+      left=3pt,
+      right=3pt,
+      top=1pt,
+      bottom=1pt,
+      colback=MyYellow!30,
+      colframe=MyRed!50,
+      arc=2mm,
+      boxrule=0pt
+    ]{
+      \small
+      \ifx#3\else\href{#3}{\raisebox{-0.1\height}\faGithub}\hspace{0.5em}\fi
+      \ifx#4\else\href{#4}{\raisebox{-0.1\height}\faFilePdf}\hspace{0.5em}\fi
+      \ifx#5\else\href{#5}{\raisebox{-0.1\height}\small\normalfont\BibTeX}\fi
+    } &
+    \textbf{\small #2}
+  \end{tabularx}\vspace{-7pt}
+}
+
+% For course listings in "Relevant Courses" section
+\newcommand{\resumeCoursesHeading}[2]{
+  \item
+  \begin{tabularx}{1.0\textwidth}{l@{\extracolsep{\fill}}r}
+    \small#1 & \textbf{\small #2} \\
+  \end{tabularx}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+% Used for bulleted list environment
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={ }]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in, label={$\vcenter{\hbox{\color{MyRed}\tiny$\bullet$}}$}]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+% Resume subheading with inline GitHub/PDF/BibTeX icons
+\newcommand{\resumeSubheadingWithLinks}[7]{%
+  \vspace{-5pt}\item
+  \begin{tabularx}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1 \hspace{.5em}
+      \tcbox[on line, boxsep=1pt, left=3pt, right=3pt, top=1pt, bottom=1pt, colback=MyYellow!30, colframe=MyRed!50, arc=2mm, boxrule=0pt]{
+        \small
+        \ifx#5\else\href{#5}{\raisebox{-0.1\height}\faGithub}\hspace{0.5em}\fi
+        \ifx#6\else\href{#6}{\raisebox{-0.1\height}\faFilePdf}\hspace{0.5em}\fi
+        \ifx#7\else\href{#7}{\raisebox{-0.1\height}\small\normalfont\BibTeX}\fi
+      }%
+    } & \textbf{\small #2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabularx}\vspace{-15pt}
+}
+
+% Skill-bar command using filled/unfilled dots (1–5 scale)
+\newcommand{\skillbar}[2]{
+  \begin{tikzpicture}[baseline=-0.3em]
+    \foreach \x in {1,2,3,4,5} {
+      \pgfmathsetmacro{\filled}{ifthenelse(\x <= #2, 1, 0)}
+      \ifnum\filled=1
+        \filldraw[fill=MyDarkGray, draw=MyDarkGray] ({\x*0.4-0.35}, 0) circle (0.1);
+      \else
+        \draw[MyDarkGray] ({\x*0.4-0.35}, 0) circle (0.1);
+      \fi
+    }
+  \end{tikzpicture}
+  \hspace{0.2cm} #1
+}
+
+%-------------------------------------------
+%                RESUME BEGINS
+%-------------------------------------------
+\begin{document}
+\pagecolor{MyBackgroundGray} % Background color
+\color{MyDarkGray}           % Default text color
+
+%---------- HEADING ----------
+{\huge \href{https://andrea-combette.com}{\color{MyRed}\textbf{\underline{Andrea Combette}}}} \hfill
+
+\begin{tabular}{@{}p{0.33\textwidth}p{0.27\textwidth}@{}}
+  \hspace{1pt}\textbf{\color{MyRed} He | Him} &
+  \Large
+  \makebox[\linewidth][r]{
+    \href{mailto:andrea.combette@ens.psl.eu}{\raisebox{-0.2\height}\faEnvelope\textsuperscript{1}} \hspace{0.3em}
+    \href{mailto:a.combette@protonmail.com}{\raisebox{-0.2\height}\faEnvelope\textsuperscript{2}} \hspace{0.3em}
+    \href{https://linkedin.com/in/andrea-combette-37a330235/}{\raisebox{-0.2\height}\faLinkedin} \hspace{0.3em}
+    \href{https://github.com/Chatr0uge}{\raisebox{-0.2\height}\faGithub} \hspace{0.3em}
+    \href{https://andrea-combette.com}{\raisebox{-0.2\height}\faGlobeAmericas} \hspace{0.3em}
+    \href{https://orcid.org/0009-0004-6918-8520}{\raisebox{-0.2\height}\faOrcid}
+  }
+\end{tabular}
+
+%-------------------------------------------
+%           LEFT COLUMN
+%-------------------------------------------
+\begin{minipage}[t]{0.6\textwidth}
+
+  %---------- EDUCATION ----------
+  \section{\faUniversity\hspace{0.5em}\sffamily Education}
+  \resumeSubHeadingListStart
+
+  \resumeSubheading
+  {École Normale Supérieure (ENSL), Lyon}{2024}
+  {M2 Numerical Modelling ; \textit{mark: 17/20}}{Lyon, France}
+
+  \resumeSubheading
+  {École Normale Supérieure (ENS), Paris}{2023}
+  {M1 ICFP in Physics; \textit{mark: 16.04/20}}{Paris, France}
+
+  \resumeSubheading
+  {École Normale Supérieure (ENS), Paris}{2022}
+  {B.Sc. Degree in Physics}{Paris, France}
+
+  \resumeSubheading
+  {Lycée Joffre, Montpellier}{2020 -- 2021}
+  {Classes Préparatoires}{Montpellier, France}
+
+  \resumeSubheading
+  {UFR Médecine, Montpellier}{2019}
+  {PACES (common first year of health studies)}{Montpellier, France}
+
+  \resumeSubheading
+  {Lycée Joffre, Montpellier}{2018}
+  {High School Degree; \textit{mark: 19.63/20, with honors}}{Montpellier, France}
+
+  \resumeSubHeadingListEnd
+
+  %---------- EXPERIENCE ----------
+  \section{\faFlask\hspace{0.5em}\sffamily Experience}
+  \resumeSubHeadingListStart
+
+  \resumeSubheadingWithLinks
+  {CNRS - ENSL}{Feb 2025 -- Now}
+  {Intern}{Lyon, France}
+  {https://gitlab.com/Chatr0uge/magellan}{}{}
+
+  \resumeItemListStart
+  \resumeItem{Inverse problem for ocean dynamics using Machine Learning}
+  \resumeItem{PINNs and SIREN architecture enhancement and study}
+  \resumeItemListEnd
+
+  \resumeSubheadingWithLinks
+  {Swiss Plasma Center - EPFL}{Feb 2024 -- July 2024}
+  {Intern}{Lausanne, Switzerland}
+  {https://github.com/Chatr0uge/Internship_SPC}
+  {https://andrea-combette.com/publication/spc/SPC.pdf}
+  {https://andrea-combette.com/publication/spc/cite.bib}
+
+  \resumeItemListStart
+  \resumeItem{Machine Learning Characterization of Plasma Turbulence in the TCV Tokamak, HPC on LEONARDO, and CUWA code}
+  \resumeItem{Co-authored: \href{https://iopscience.iop.org/article/10.1088/1361-6587/adcd2a}{\underline{\emph{Nonlinear effects in Fluctuation SPR}}} in IOP Journal}
+  \resumeItemListEnd
+
+  \resumeSubheadingWithLinks
+  {IMS - Intégration Matériaux Systèmes}{July 2023}
+  {Intern}{Bordeaux, France}
+  {}{https://andrea-combette.com/publication/preprint/preprint.pdf}{}
+
+  \resumeItemListStart
+  \resumeItem{SNN networks study and GUI implementation}
+  \resumeItemListEnd
+
+  \resumeSubheadingWithLinks
+  {LKB - LPENS}{Sep 2023 -- Feb 2024}
+  {Project}{Paris, France}
+  {https://github.com/Chatr0uge/NV_center}
+  {https://andrea-combette.com/publication/nv_center/NV_center.pdf}
+  {https://andrea-combette.com/publication/nv_center/cite.bib}
+
+  \resumeItemListStart
+  \resumeItem{NV centers in diamond, practical project}
+  \resumeItem{Characterization of NV center's orientation in diamond}
+  \resumeItemListEnd
+
+  \resumeSubheadingWithLinks
+  {IBENS - ENS Biology Institute}{Sep 2023 -- Feb 2024}
+  {Project}{Paris, France}
+  {}{https://andrea-combette.com/uploads/cr_imex.pdf}{}
+
+  \resumeItemListStart
+  \resumeItem{Spikesorting pipelines, working on Lussac}
+  \resumeItemListEnd
+
+  \resumeSubheadingWithLinks
+  {IPGG - Institut Pierre-Gilles de Gennes}{May 2023}
+  {Project}{Paris, France}
+  {}{https://andrea-combette.com/uploads/Microfluidique.pdf}{}
+
+  \resumeItemListStart
+  \resumeItem{Electro-Osmosis Filtration with nano-membrane}
+  \resumeItem{Study of the Hysteresis in the flow}
+  \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+\end{minipage}
+\hfill
+%-------------------------------------------
+%           RIGHT COLUMN
+%-------------------------------------------
+\begin{minipage}[t]{0.37\textwidth}
+
+  %---------- RELEVANT COURSES ----------
+  \section{\faChalkboardTeacher\hspace{0.5em}\sffamily\bfseries Relevant Courses}
+  \resumeSubHeadingListStart
+
+  \resumeCoursesHeading
+  {\textbf{Computational Statistical Physics}}{2024}
+  \resumeItemListStart
+  \resumeItem{\emph{Ralf. Evraers}, \textbf{ENSL}}
+  \resumeItemListEnd
+
+  \resumeCoursesHeading
+  {\textbf{Computational Fluid Dynamics}}{2024}
+  \resumeItemListStart
+  \resumeItem{\emph{G. Laibre, E. Levèque, A. Venaille}, \textbf{ENSL}}
+  \resumeItemListEnd
+
+  \resumeCoursesHeading
+  {\textbf{Computational Quantum Many Body}}{2024}
+  \resumeItemListStart
+  \resumeItem{\emph{T.Roscilde, F.Mezzacapo}, \textbf{ENSL}}
+  \resumeItemListEnd
+
+  \resumeCoursesHeading
+  {\textbf{Scientific Software Development}}{2024}
+  \resumeItemListStart
+  \resumeItem{\emph{A.Farnudi, E.Ghobadpour}, \textbf{ENSL}}
+  \resumeItemListEnd
+
+  \resumeCoursesHeading
+  {\textbf{Machine Learning}}{2024}
+  \resumeItemListStart
+  \resumeItem{\emph{N. Pustelnick, J.Tachella}, \textbf{ENSL}}
+  \resumeItemListEnd
+
+  \resumeCoursesHeading
+  {\textbf{Numerical Methods for PDEs}}{2023}
+  \resumeItemListStart
+  \resumeItem{\emph{G.Legendre}, \textbf{ENS}}
+  \resumeItemListEnd
+
+  \resumeCoursesHeading
+  {\textbf{ML preparatory Week}}{2023}
+  \resumeItemListStart
+  \resumeItem{\emph{Zaccharie Ramzi, Hugo Richard}, \textbf{PSL}}
+  \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+  %---------- TECHNICAL SKILLS & INTERESTS ----------
+  \section{\faCoffee\hspace{0.5em}\sffamily Technical Skills and Interests}
+\vspace{.5em}
+  \small{\emph{This section is not an evaluation of my skills, but rather a summary of my interests and projects, and how much i have worked on them.}}
+  % Programming Languages & Tools
+  \vspace{.5em}
+
+  \textbf{\faCode\hspace{0.5em}Programming Languages \& Tools}
+  \begin{center}
+    \begin{minipage}{1\textwidth}
+      \begin{tcolorbox}[
+          colback=MyYellow!30,
+          colframe=MyRed!30,
+          arc=4mm,
+          boxrule=0pt,
+          left=5pt,
+          right=5pt,
+          top=2pt,
+          bottom=5pt
+        ]
+        \begin{multicols}{2}
+          \color{MyDarkGray}
+          \begin{itemize}[leftmargin=0.05in, label={},  itemsep=-3pt]
+            \footnotesize{\item{\skillbar{\faPython}{4}}}
+                  \footnotesize{\item{\skillbar{\faHtml5 \faCss3}{3}}}
+                  \footnotesize{\item{\skillbar{\faJava}{2}}}
+                  \footnotesize{\item{\skillbar{\LaTeX}{4}}}
+          \end{itemize}
+          \begin{itemize}[leftmargin=0.05in, label={},  itemsep=-3pt]
+            \footnotesize{\item{\skillbar{\sffamily C++}{3}}}
+                  \footnotesize{\item{\skillbar{\faTerminal}{3}}}
+                  \footnotesize{\item{\skillbar{\faGit}{3}}}
+                  \footnotesize{\item{\skillbar{\faEthereum}{2}}}
+          \end{itemize}
+        \end{multicols}
+      \end{tcolorbox}
+    \end{minipage}
+  \end{center}
+
+  % Languages
+  \textbf{\faLanguage\hspace{0.5em}Languages}
+  \begin{center}
+    \begin{minipage}{0.95\textwidth}
+      \begin{tcolorbox}[
+          colback=MyYellow!30,
+          colframe=MyRed!30,
+          arc=4mm,
+          boxrule=0pt,
+          left=5pt,
+          right=5pt,
+          top=5pt,
+          bottom=5pt
+        ]
+        \begin{multicols}{2}
+          \color{MyDarkGray}
+          \begin{itemize}[leftmargin=0.05in, label={}, itemsep=-3pt]
+            \footnotesize{\item{\skillbar{\sffamily Fr}{5}}}
+                  \footnotesize{\item{\skillbar{\sffamily Ge}{3}}}
+          \end{itemize}
+          \begin{itemize}[leftmargin=0.05in, label={}, itemsep=-3pt]
+            \footnotesize{\item{\skillbar{\sffamily En}{4}}}
+          \end{itemize}
+        \end{multicols}
+      \end{tcolorbox}
+    \end{minipage}
+  \end{center}
+
+  % Hobbies & Interests
+  \textbf{\faGuitar\hspace{0.5em}Hobbies \& Interests}
+  \begin{center}
+    \begin{minipage}{0.95\textwidth}
+      \begin{tcolorbox}[
+          colback=MyYellow!30,
+          colframe=MyRed!30,
+          arc=4mm,
+          boxrule=0pt,
+          left=5pt,
+          right=5pt,
+          top=5pt,
+          bottom=5pt
+        ]
+        \begin{multicols}{2}
+          \color{MyDarkGray}
+          \begin{itemize}[leftmargin=0.05in, label={}, itemsep=-3pt]
+            \small{\item{\skillbar{\faMusic}{4}}}
+                  \small{\item{\skillbar{\faPaintBrush}{3}}}
+                  \small{\item{\skillbar{\faChess}{3}}}
+          \end{itemize}
+          \begin{itemize}[leftmargin=0.05in, label={}, itemsep=-3pt]
+            \small{\item{\skillbar{\faGuitar}{4}}}
+                  \small{\item{\skillbar{\faRunning}{4}}}
+          \end{itemize}
+        \end{multicols}
+      \end{tcolorbox}
+    \end{minipage}
+  \end{center}
+
+\end{minipage}
+
+%-------------------------------------------
+%     PERSONAL PROJECTS
+%-------------------------------------------
+\section{\faPenNib\hspace{0.5em}\sffamily\bfseries Personal Projects | Contribution}
+\resumeSubHeadingListStart
+
+\resumeProjectHeading
+{\textbf{Computational Statistical Physics Overview} \emph{| Python}}{2024}
+{https://github.com/Chatr0uge/lecture_notes_CSP}
+{https://andrea-combette.com/publication/stat-notes/Stat-notes.pdf}
+{https://andrea-combette.com/publication/stat-notes/cite.bib}
+\resumeItemListStart
+\resumeItem{Study of Hamiltonian dynamics, Thermostating effect, Finite size effect, thermodynamic integration}
+\resumeItem{Achievements: Ising model, Lennard-Jones model}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{Western intensification processes simulations} \emph{| Python}}{2024}
+{https://github.com/Chatr0uge/lecture_notes_CSP}
+{https://andrea-combette.com/publication/cfd/CFD.pdf}
+{https://andrea-combette.com/publication/cfd/cite.bib}
+\resumeItemListStart
+\resumeItem{Global view of the Stommel and Munk models; stability analysis of numerical schemes}
+\resumeItem{Arakawa Jacobian, unstable friction, low and high non-linear regime study}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{Long time Overturn Study in the second phase of the moon cooling} \emph{| Python}}{2024}
+{https://gitlab.com/LouisPoitevin/magma_ocean}
+{https://andrea-combette.com/publication/geophysics/Geophysics.pdf}
+{https://andrea-combette.com/publication/geophysics/cite.bib}
+\resumeItemListStart
+\resumeItem{Simulated unstable convection processes identified by L.Collin}
+\resumeItem{Overturning circulation analysis with thermal profiles and Rayleigh number variation}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{CGBD contributions} \emph{| Pybind11, Python, C++}}{2024}
+{https://gitlab.com/e.ghobadpour/max_model_cpp/-/tree/pybind_implementation?ref_type=heads}{}{}
+\resumeItemListStart
+\resumeItem{Pybind implementation of the Coarse-Grain Bacterial DNA Simulator (CGBD)}
+\resumeItem{Achievements: Built a Python/C++ library with extended CI, documentation, and tests}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{Study of Poincaré Waves} \emph{| Python}}{2023 -- 2024}
+{https://github.com/Chatr0uge/lecture_notes_CSP}
+{https://andrea-combette.com/publication/poincar_waves/Poincar_Waves.pdf}
+{https://andrea-combette.com/publication/poincar_waves/cite.bib}
+\resumeItemListStart
+\resumeItem{Solving equatorial Shallow Water Equation using Chebyshev Spectral Method}
+\resumeItem{Achievements: Decomposition into Rossby waves and Kelvin wave modes}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{Generating Realistic Matter Fields for Cosmological Simulations (ML)} \emph{| PyTorch, Globus}}{2023 -- 2024}
+{https://github.com/maclalame/MachineLearning}
+{https://andrea-combette.com/uploads/cr_ML.pdf}{}
+\resumeItemListStart
+\resumeItem{CNN and diffusion network models using Quijote and CAMELS datasets}
+\resumeItem{Achievements: Generating 2D samples of matter fields}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{Hydrodynamics and Mechanics Simulations} \emph{| Comsol, Python}}{2021 -- 2022}
+{https://github.com/Chatr0uge/T.I.P.E_Karman}{}{}
+\resumeItemListStart
+\resumeItem{Optimization of Von Karman Street for energy harvesting}
+\resumeItem{Achievements: Built an optimized generator using induction and Von Karman Streets}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{SpikeWizard Package} \emph{| Python, pip, Sphinx}}{2023 -- 2024}
+{https://github.com/Chatr0uge/SpikeWizard}{}{}
+\resumeItemListStart
+\resumeItem{SciPy pipeline for automated fitting: \href{https://spikewizard.readthedocs.io/}{spikewizard.readthedocs.io}}
+\resumeItem{Achievements: Python package for spikesorting and fitting (plus documentation)}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{ThemeChanger (in development)} \emph{| Python, bs4}}{2023 -- 2024}
+{https://github.com/Chatr0uge/ThemeChanger}{}{}
+\resumeItemListStart
+\resumeItem{K-Neighbors algorithm for color detection and matching}
+\resumeItem{Achievements: Automated color matching in images and files}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{VsCode Theme} \emph{| Python, VSCode Marketplace}}{2023 -- 2024}
+{https://github.com/Chatr0uge/SmoothBurn-theme-for-VsCode}{}{}
+\resumeItemListStart
+\resumeItem{Built 3 themes for VSCode using the ThemeChanger package}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+\end{document}
